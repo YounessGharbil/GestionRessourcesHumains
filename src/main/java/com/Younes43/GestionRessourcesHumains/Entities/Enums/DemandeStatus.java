@@ -1,5 +1,5 @@
 package com.Younes43.GestionRessourcesHumains.Entities.Enums;
 
 public enum DemandeStatus {
-    Refused,Pending,Treated
+    En_Traitement,Refusé,Validé,Timed_Out
 }

@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface RapportSuperviseurRepository extends JpaRepository<RAPPORT_SUPERVISEUR,Long> {
     Optional<RAPPORT_SUPERVISEUR> findByDemandeDeSanctionId(Long id);
+
 }

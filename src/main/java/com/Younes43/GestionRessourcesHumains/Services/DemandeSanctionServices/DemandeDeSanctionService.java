@@ -1,6 +1,7 @@
 package com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices;
 
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.DemandeDeSanction;
+import com.Younes43.GestionRessourcesHumains.Entities.Enums.NiveauDeTraitement;
 import com.Younes43.GestionRessourcesHumains.Entities.Requests.CreateDemandeDeSanctionRequest;
 import com.Younes43.GestionRessourcesHumains.IServices.IDemandeDeSanctionService;
 import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.DemandeDeSanctionRepository;
@@ -13,6 +14,7 @@ public class DemandeDeSanctionService implements IDemandeDeSanctionService {
      private final DemandeDeSanctionRepository demandeDeSanctionRepository;
     @Override
     public DemandeDeSanction createDemandeDeSanction(CreateDemandeDeSanctionRequest createDemandeDeSanctionRequest){
+        System.out.println("demande status"+createDemandeDeSanctionRequest.getDemandeStatus());
 
         return demandeDeSanctionRepository.save(DemandeDeSanction.builder()
                         .salarie(createDemandeDeSanctionRequest.getSalarie())

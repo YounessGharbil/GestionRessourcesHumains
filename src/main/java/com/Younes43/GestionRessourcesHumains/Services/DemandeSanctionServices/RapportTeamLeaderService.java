@@ -31,7 +31,7 @@ public class RapportTeamLeaderService implements IRapportTeamLeaderService {
                             throws MessagingException, GeneralSecurityException, IOException {
 
         utilities.validateDemande(rapportTeamLeader,headers);
-        ApplicationUser superior = utilities.getSuperior(headers);
+        ApplicationUser superior = utilities.getSuperior(rapportTeamLeader,headers);
         String validationMSG=Utilities.getValidationMSG(rapportTeamLeader.isValidated());
         gmailService.sendMail(superior.getEmail(),"demande created",
                 "demande created "+validationMSG

@@ -3,7 +3,8 @@ package com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices.U
 import com.Younes43.GestionRessourcesHumains.Entities.ApplicationUser;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.DemandeDeSanction;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.IRapport;
-import com.Younes43.GestionRessourcesHumains.Entities.Enums.Role;
+import com.Younes43.GestionRessourcesHumains.Entities.Enums.*;
+import com.Younes43.GestionRessourcesHumains.Entities.Salarie;
 import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.DemandeDeSanctionRepository;
 import com.Younes43.GestionRessourcesHumains.Repositories.UserRepository;
 import com.Younes43.GestionRessourcesHumains.Services.GmailService;
@@ -54,48 +55,110 @@ public class Utilities {
         headers.put("department",department);
         return headers;
     }
-    public  ApplicationUser getSuperior(HashMap<String,String> headers){
+    public  ApplicationUser getSuperior(IRapport rapport, HashMap<String,String> headers){
+
+        Salarie salarie=rapport.getDemandeDeSanction().getSalarie();
+        System.out.println("--------------->"+salarie.getMatricule());
+        System.out.println("--------------->"+salarie.getBu());
+        System.out.println("--------------->"+BusinessUnit.APPLICATION_TOOLING.name());
+        System.out.println("--------------->"+salarie.getBu().toString().equals(BusinessUnit.APPLICATION_TOOLING.name().trim()
+        ));
         String userRole= headers.get("userRole");
         String site= headers.get("site");
         String department= headers.get("department");
-        Role superioRole = switch (userRole) {
-            case "ROLE_TEAM_LEADER" -> Role.ROLE_SUPERVISEUR;
-            case "ROLE_SUPERVISEUR" -> Role.ROLE_MANAGER;
-            case "ROLE_MANAGER" -> Role.ROLE_RH;
-            case "ROLE_RH" -> Role.ROLE_RH_PLUS1;
-            default -> null;
-        };
+        Role superioRole;
+
+        switch (userRole) {
+            case "ROLE_TEAM_LEADER" -> superioRole = Role.ROLE_SUPERVISEUR;
+            case "ROLE_SUPERVISEUR" -> {
+                if (isDirect(salarie)) {
+                    superioRole = Role.ROLE_RH;
+                } else {
+                    superioRole = Role.ROLE_MANAGER;
+                }
+            }
+            case "ROLE_MANAGER" -> superioRole = Role.ROLE_RH;
+            case "ROLE_RH" -> superioRole = Role.ROLE_RH_PLUS1;
+            default -> superioRole = null;
+        }
         ApplicationUser superior=userRepository.findByRoleAndDepartmentAndSite(superioRole,department,site).isPresent()?
                 userRepository.findByRoleAndDepartmentAndSite(superioRole,department,site).get():null;
         return superior;
     }
+
+    private boolean isDirect(Salarie salarie) {
+        return salarie.getBu().toString().equals(BusinessUnit.INDUSTRIAL.name()) || salarie.getBu().toString().equals(BusinessUnit.APPLICATION_TOOLING.name());
+    }
+
     public void validateDemande(IRapport rapport,HashMap<String,String> headers){
         DemandeDeSanction savedDemandeDeSanction=rapport.getDemandeDeSanction();
         if(rapport.isValidated()){
             switch (headers.get("userRole")) {
-                case "ROLE_TEAM_LEADER" -> savedDemandeDeSanction.setTeamLeaderValidation(true);
-                case "ROLE_SUPERVISEUR" -> savedDemandeDeSanction.setSuperviseurValidation(true);
-                case "ROLE_MANAGER" -> savedDemandeDeSanction.setManagerValidation(true);
-                case "ROLE_RH" -> savedDemandeDeSanction.setRhValidation(true);
-                case "ROLE_RH_PLUS1" -> savedDemandeDeSanction.setRhPlus1Validation(true);
+                case "ROLE_TEAM_LEADER" -> {
+                    savedDemandeDeSanction.setTeamLeaderValidation(true);
+                    savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.TEAM_LEADER.name());
+                }
+                case "ROLE_SUPERVISEUR" -> {
+                    savedDemandeDeSanction.setSuperviseurValidation(true);
+                    savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.SUPERVISEUR.name());
+                }
+                case "ROLE_MANAGER" -> {
+                    savedDemandeDeSanction.setManagerValidation(true);
+                    savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.MANAGER.name());
+                }
+                case "ROLE_RH" -> {
+                    savedDemandeDeSanction.setRhValidation(true);
+                    savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.RH.name());
+                }
+                case "ROLE_RH_PLUS1" -> {
+                    savedDemandeDeSanction.setRhPlus1Validation(true);
+                    savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.RH_PLUS1.name());
+                }
             }
-            demandeDeSanctionRepository.save(savedDemandeDeSanction);
         }
+        else {
+            switch (headers.get("userRole")) {
+                case "ROLE_TEAM_LEADER" -> savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.TEAM_LEADER.name());
+                case "ROLE_SUPERVISEUR" -> savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.SUPERVISEUR.name());
+                case "ROLE_MANAGER" -> savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.MANAGER.name());
+                case "ROLE_RH" -> {
+                    savedDemandeDeSanction.setDemandeStatus(DemandeStatus.Refusé.name());
+                    savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.RH.name());
+                }
+                case "ROLE_RH_PLUS1" -> {
+                    savedDemandeDeSanction.setDemandeStatus(DemandeStatus.Refusé.name());
+                    savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.RH_PLUS1.name());
+                }
+            }
+        }
+        demandeDeSanctionRepository.save(savedDemandeDeSanction);
+
+
+
     }
     public static String getValidationMSG(boolean validation){
         String validationmsg=validation?"and validated":"and not validated";
         return  validationmsg;
     }
     public void sendMailToSuperior(IRapport rapport,HashMap<String,String> headers) throws MessagingException, GeneralSecurityException, IOException {
+
         validateDemande(rapport, headers);
-        ApplicationUser superior = getSuperior(headers);
-        if (superior != null) {
+        ApplicationUser superior = getSuperior(rapport, headers);
+        DemandeDeSanction demandeDeSanction=rapport.getDemandeDeSanction();
+
+        if (superior != null && !(headers.get("userRole").equals("ROLE_RH") && !rapport.isValidated()) ) {
+
             String validationMSG = Utilities.getValidationMSG(rapport.isValidated());
             gmailService.sendMail(superior.getEmail(), "demande created",
                     "demande created " + validationMSG
                             + " by " + rapport.getUserMatricule() + " with id="
                             + rapport.getDemandeDeSanction().getId());
+
+        } else if (rapport.isValidated()) {
+            demandeDeSanction.setDemandeStatus(DemandeStatus.Validé.name());
         }
+
+        demandeDeSanctionRepository.save(demandeDeSanction);
     }
 }
 

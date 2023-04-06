@@ -24,6 +24,7 @@ public class RaportRhService implements IRaportRhService {
    public RAPPORT_RH createRapportRh(RAPPORT_RH rapportRh,
                                      HashMap<String,String> headers) throws MessagingException, GeneralSecurityException, IOException {
 
+
       utilities.sendMailToSuperior(rapportRh,headers);
 
       return rapportRhRepository.save(rapportRh);

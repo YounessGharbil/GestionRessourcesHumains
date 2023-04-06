@@ -46,5 +46,6 @@ public class DemandeDeSanction {
     private boolean managerValidation;
     private boolean rhValidation;
     private boolean rhPlus1Validation;
-    private DemandeStatus demandeStatus;
+    private String demandeStatus;
+    private String niveauDeTraitement;
 }

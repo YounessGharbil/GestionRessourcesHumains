@@ -47,13 +47,12 @@ public class RapportTeamLeaderController implements IRapportTeamLeaderController
       HashMap<String,String> headers= Utilities.extractHeaders(request);
 
       Salarie salarie= salarieService.getSalarieBySalarieId(createRapportTeamLeaderRequest.getSalariéMatricule());
-      System.out.println(createRapportTeamLeaderRequest.getSalariéMatricule());
 
       ApplicationUser user=userService.getUser(headers.get("matricule"));
 
       CreateDemandeDeSanctionRequest createDemandeDeSanctionRequest=CreateDemandeDeSanctionRequest.builder()
               .user(user)
-              .demandeStatus(DemandeStatus.Pending)
+              .demandeStatus(DemandeStatus.En_Traitement.name())
               .salarie(salarie)
               .build();
 

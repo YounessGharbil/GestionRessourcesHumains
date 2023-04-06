@@ -15,5 +15,5 @@ import lombok.NoArgsConstructor;
 public class CreateDemandeDeSanctionRequest {
     private ApplicationUser user;
     private Salarie salarie;
-    private DemandeStatus demandeStatus;
+    private String demandeStatus;
 }
