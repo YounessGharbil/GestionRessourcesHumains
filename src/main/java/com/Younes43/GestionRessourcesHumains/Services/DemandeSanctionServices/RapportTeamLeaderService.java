@@ -29,16 +29,18 @@ public class RapportTeamLeaderService implements IRapportTeamLeaderService {
     public RAPPORT_TEAM_LEADER createRapportTeamLeader(RAPPORT_TEAM_LEADER rapportTeamLeader,
                                                        HashMap<String,String> headers)
                             throws MessagingException, GeneralSecurityException, IOException {
+        if(!rapportTeamLeader.isEscalatedToRh() ) {
+            utilities.validateDemande(rapportTeamLeader, headers);
+            ApplicationUser superior = utilities.getSuperior(rapportTeamLeader, headers);
+            String validationMSG = Utilities.getValidationMSG(rapportTeamLeader.isValidated());
+            gmailService.sendMail(superior.getEmail(), "demande created",
+                    "demande created " + validationMSG
+                            + " by " + rapportTeamLeader.getUserMatricule() + " with id="
+                            + rapportTeamLeader.getDemandeDeSanction().getId());
 
-        utilities.validateDemande(rapportTeamLeader,headers);
-        ApplicationUser superior = utilities.getSuperior(rapportTeamLeader,headers);
-        String validationMSG=Utilities.getValidationMSG(rapportTeamLeader.isValidated());
-        gmailService.sendMail(superior.getEmail(),"demande created",
-                "demande created "+validationMSG
-                +" by "+rapportTeamLeader.getUserMatricule()+" with id="
-                +rapportTeamLeader.getDemandeDeSanction().getId());
-
-        return rapportTeamLeaderRepository.save(rapportTeamLeader);
+            return rapportTeamLeaderRepository.save(rapportTeamLeader);
+        }
+        return null;
     }
     @Override
     public RAPPORT_TEAM_LEADER getRapportTeamLeader(Long id){

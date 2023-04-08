@@ -3,6 +3,7 @@ package com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices.U
 import com.Younes43.GestionRessourcesHumains.Entities.ApplicationUser;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.DemandeDeSanction;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.IRapport;
+import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_SUPERVISEUR;
 import com.Younes43.GestionRessourcesHumains.Entities.Enums.*;
 import com.Younes43.GestionRessourcesHumains.Entities.Salarie;
 import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.DemandeDeSanctionRepository;
@@ -159,6 +160,23 @@ public class Utilities {
         }
 
         demandeDeSanctionRepository.save(demandeDeSanction);
+    }
+
+    public void notifierRh(IRapport rapport) throws MessagingException, GeneralSecurityException, IOException {
+        ApplicationUser user=userRepository.
+                findByMatricule(rapport.getUserMatricule()).get();
+
+        ApplicationUser rh=userRepository.
+                findByRoleAndDepartmentAndSite(Role.ROLE_RH,user.getDepartment(), user.getSite()).get();
+
+        gmailService.sendMail(rh.getEmail(), "demande escalation",
+                "demande not processed by "
+                        +" "+user.getUsername()+" "
+                        + rapport.getUserMatricule() + " with id="
+                        + rapport.getDemandeDeSanction().getId());
+        System.out.println("-------------------------->escalated");
+
+
     }
 }
 

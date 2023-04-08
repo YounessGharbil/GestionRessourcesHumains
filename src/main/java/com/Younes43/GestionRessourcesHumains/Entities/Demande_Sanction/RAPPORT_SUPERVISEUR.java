@@ -29,6 +29,9 @@ public class RAPPORT_SUPERVISEUR implements IRapport {
     private String sanctionDemandé;
     private String date;
     private boolean isValidated;
+    private boolean processedByManager;
+    private boolean escalatedToRh;
+
 
 
 
