@@ -8,6 +8,8 @@ import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionReposit
 import com.Younes43.GestionRessourcesHumains.Repositories.UserRepository;
 import com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices.Utilities.Utilities;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DemandeEscalationService {
     private final Utilities utilities;
     private final UserRepository userRepository;
@@ -35,6 +38,9 @@ public class DemandeEscalationService {
                 utilities.notifierRh(rapportSuperviseur);
                 rapportSuperviseur.setEscalatedToRh(true);
                 rapportSuperviseurRepository.save(rapportSuperviseur);
+                log.info("rapportSuperviseur with rapportid="+rapportSuperviseur.getId()
+                        +" and demandeid="+rapportSuperviseur.getDemandeDeSanction().getId()
+                        +" escalated to rh");
             }
 
         }
@@ -44,6 +50,10 @@ public class DemandeEscalationService {
                 utilities.notifierRh(rapportTeamLeader);
                 rapportTeamLeader.setEscalatedToRh(true);
                 rapportTeamLeaderRepository.save(rapportTeamLeader);
+                log.info("rapportTeamLeader with rapportid="+rapportTeamLeader.getId()
+                        +" and demandeid="+rapportTeamLeader.getDemandeDeSanction().getId()
+                        +" escalated to rh");
+
             }
 
         }

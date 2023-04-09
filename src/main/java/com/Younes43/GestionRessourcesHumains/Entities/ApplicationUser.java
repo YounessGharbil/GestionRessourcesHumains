@@ -29,6 +29,9 @@ public class ApplicationUser  implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "salarie_id")
+    private Salarie salarie;
     private String matricule;
     private String site;
     private String department;

@@ -23,11 +23,14 @@ public class RaportRhService implements IRaportRhService {
    @Override
    public RAPPORT_RH createRapportRh(RAPPORT_RH rapportRh,
                                      HashMap<String,String> headers) throws MessagingException, GeneralSecurityException, IOException {
-
+      var savedRapport_rh=rapportRhRepository.findByDemandeDeSanction(rapportRh.getDemandeDeSanction());
+      if(!savedRapport_rh.isPresent()){
 
       utilities.sendMailToSuperior(rapportRh,headers);
 
       return rapportRhRepository.save(rapportRh);
+      }
+      return null;
    }
       @Override
       public RAPPORT_RH getRapportRh(Long id){

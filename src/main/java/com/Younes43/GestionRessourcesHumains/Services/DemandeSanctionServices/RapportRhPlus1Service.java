@@ -22,9 +22,15 @@ public class RapportRhPlus1Service implements IRapportRhPlus1Service {
     @Override
     public RAPPORT_RHPLUS1 createRapportRhPlus1(RAPPORT_RHPLUS1 rapportRhplus1,
                                                 HashMap<String,String> headers) throws MessagingException, GeneralSecurityException, IOException {
-        utilities.sendMailToSuperior(rapportRhplus1,headers);
+        var savedRapport_rhplus1=rapportRhPlus1Repository.findByDemandeDeSanction(rapportRhplus1.getDemandeDeSanction());
 
-        return rapportRhPlus1Repository.save(rapportRhplus1);
+        if(!savedRapport_rhplus1.isPresent()){
+        utilities.sendMailToSuperior(rapportRhplus1,headers);
+            return rapportRhPlus1Repository.save(rapportRhplus1);
+
+        }
+        return null;
+
     }
     @Override
     public RAPPORT_RHPLUS1 getRapportRhPlus1(Long id){

@@ -59,11 +59,6 @@ public class Utilities {
     public  ApplicationUser getSuperior(IRapport rapport, HashMap<String,String> headers){
 
         Salarie salarie=rapport.getDemandeDeSanction().getSalarie();
-        System.out.println("--------------->"+salarie.getMatricule());
-        System.out.println("--------------->"+salarie.getBu());
-        System.out.println("--------------->"+BusinessUnit.APPLICATION_TOOLING.name());
-        System.out.println("--------------->"+salarie.getBu().toString().equals(BusinessUnit.APPLICATION_TOOLING.name().trim()
-        ));
         String userRole= headers.get("userRole");
         String site= headers.get("site");
         String department= headers.get("department");
@@ -174,7 +169,6 @@ public class Utilities {
                         +" "+user.getUsername()+" "
                         + rapport.getUserMatricule() + " with id="
                         + rapport.getDemandeDeSanction().getId());
-        System.out.println("-------------------------->escalated");
 
 
     }

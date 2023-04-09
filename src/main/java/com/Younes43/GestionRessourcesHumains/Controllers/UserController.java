@@ -33,6 +33,7 @@ public class UserController implements IUserController {
         }
 
         var user=ApplicationUser.builder()
+                .salarie(salarie)
                 .email(createUserRequest.getEmail())
                 .password(passwordEncoder.encode(createUserRequest.getPassword()))
                 .role(createUserRequest.getRole())

@@ -26,11 +26,15 @@ public class RapportManagerService implements IRapportManagerService {
     @Override
     public RAPPORT_MANAGER createRapportManager(RAPPORT_MANAGER rapportManager,
                                                 HashMap<String,String> headers ) throws MessagingException, GeneralSecurityException, IOException {
-       utilities.sendMailToSuperior(rapportManager,headers);
+        var savedRapport_manager=rapportManagerRepository.findByDemandeDeSanction(rapportManager.getDemandeDeSanction());
+        RAPPORT_SUPERVISEUR rapport_superviseur=rapportSuperviseurRepository.findByDemandeDeSanction(rapportManager.getDemandeDeSanction()).get();
+    if(!savedRapport_manager.isPresent() && !rapport_superviseur.isEscalatedToRh()){
+        utilities.sendMailToSuperior(rapportManager,headers);
         RAPPORT_SUPERVISEUR rapportSuperviseur=rapportManager.getDemandeDeSanction().getRapportSuperviseur();
         rapportSuperviseur.setProcessedByManager(true);
         rapportSuperviseurRepository.save(rapportSuperviseur);
-        return rapportManagerRepository.save(rapportManager);
+        return rapportManagerRepository.save(rapportManager);}
+    return null;
     }
     @Override
     public RAPPORT_MANAGER getRapportManager(Long id){

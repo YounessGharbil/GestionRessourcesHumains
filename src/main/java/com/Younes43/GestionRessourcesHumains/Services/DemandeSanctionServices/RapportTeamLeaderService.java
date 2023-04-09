@@ -1,6 +1,7 @@
 package com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices;
 
 import com.Younes43.GestionRessourcesHumains.Entities.ApplicationUser;
+import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_SUPERVISEUR;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_TEAM_LEADER;
 import com.Younes43.GestionRessourcesHumains.IServices.IRapportTeamLeaderService;
 import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.RapportTeamLeaderRepository;
@@ -29,7 +30,9 @@ public class RapportTeamLeaderService implements IRapportTeamLeaderService {
     public RAPPORT_TEAM_LEADER createRapportTeamLeader(RAPPORT_TEAM_LEADER rapportTeamLeader,
                                                        HashMap<String,String> headers)
                             throws MessagingException, GeneralSecurityException, IOException {
-        if(!rapportTeamLeader.isEscalatedToRh() ) {
+        var savedTeamLeader=rapportTeamLeaderRepository.findByDemandeDeSanction(rapportTeamLeader.getDemandeDeSanction());
+
+        if( !savedTeamLeader.isPresent()) {
             utilities.validateDemande(rapportTeamLeader, headers);
             ApplicationUser superior = utilities.getSuperior(rapportTeamLeader, headers);
             String validationMSG = Utilities.getValidationMSG(rapportTeamLeader.isValidated());

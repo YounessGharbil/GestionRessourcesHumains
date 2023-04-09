@@ -28,9 +28,12 @@ public class RapportSuperviseurService implements IRapportSuperviseurService {
     public RAPPORT_SUPERVISEUR createRapportSuperviseur(RAPPORT_SUPERVISEUR rapportSuperviseur,
                                                         HashMap<String,String> headers)
                                                         throws MessagingException, GeneralSecurityException, IOException {
-        if (!rapportSuperviseur.isEscalatedToRh()) {
+        var savedRapport_superviseur=rapportSuperviseurRepository.findByDemandeDeSanction(rapportSuperviseur.getDemandeDeSanction());
+        RAPPORT_TEAM_LEADER rapportTeamLeader=rapportTeamLeaderRepository.findByDemandeDeSanction(rapportSuperviseur.getDemandeDeSanction()).get();
+
+        if (!savedRapport_superviseur.isPresent() && !rapportTeamLeader.isEscalatedToRh()) {
             utilities.sendMailToSuperior(rapportSuperviseur, headers);
-            RAPPORT_TEAM_LEADER rapportTeamLeader = rapportSuperviseur.getDemandeDeSanction().getRapportTeamLeader();
+            //RAPPORT_TEAM_LEADER rapportTeamLeader = rapportSuperviseur.getDemandeDeSanction().getRapportTeamLeader();
             rapportTeamLeader.setProcessedBySuperviseur(true);
             rapportTeamLeaderRepository.save(rapportTeamLeader);
             return rapportSuperviseurRepository.save(rapportSuperviseur);
