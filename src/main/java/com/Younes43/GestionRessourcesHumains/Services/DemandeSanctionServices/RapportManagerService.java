@@ -8,6 +8,7 @@ import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionReposit
 import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.RapportSuperviseurRepository;
 import com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices.Utilities.Utilities;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
@@ -24,7 +25,7 @@ public class RapportManagerService implements IRapportManagerService {
 
     @Transactional
     @Override
-    public RAPPORT_MANAGER createRapportManager(RAPPORT_MANAGER rapportManager,
+    public RAPPORT_MANAGER createRapportManager(@Valid RAPPORT_MANAGER rapportManager,
                                                 HashMap<String,String> headers ) throws MessagingException, GeneralSecurityException, IOException {
         var savedRapport_manager=rapportManagerRepository.findByDemandeDeSanction(rapportManager.getDemandeDeSanction());
         RAPPORT_SUPERVISEUR rapport_superviseur=rapportSuperviseurRepository.findByDemandeDeSanction(rapportManager.getDemandeDeSanction()).get();

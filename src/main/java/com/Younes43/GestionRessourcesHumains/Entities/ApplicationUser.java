@@ -3,6 +3,9 @@ package com.Younes43.GestionRessourcesHumains.Entities;
 import com.Younes43.GestionRessourcesHumains.Entities.Enums.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,15 +32,30 @@ public class ApplicationUser  implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
+    @NotBlank
+    @NotNull
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "salarie_id")
     private Salarie salarie;
+    @NotBlank
+    @NotNull
     private String matricule;
+    @NotBlank
+    @NotNull
     private String site;
+    @NotBlank
+    @NotNull
     private String department;
+    @NotBlank(message = "")
+    @NotNull(message = "")
+    @Email
     private String email;
+    @NotBlank(message = "")
+    @NotNull(message = "")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+    @NotBlank(message = "")
+    @NotNull(message = "")
     @Enumerated(EnumType.STRING)
     private Role role;
 

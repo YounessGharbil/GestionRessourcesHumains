@@ -8,6 +8,7 @@ import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionReposit
 import com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices.Utilities.Utilities;
 import com.Younes43.GestionRessourcesHumains.Services.GmailService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class RapportTeamLeaderService implements IRapportTeamLeaderService {
 
     @Transactional
     @Override
-    public RAPPORT_TEAM_LEADER createRapportTeamLeader(RAPPORT_TEAM_LEADER rapportTeamLeader,
+    public RAPPORT_TEAM_LEADER createRapportTeamLeader(@Valid RAPPORT_TEAM_LEADER rapportTeamLeader,
                                                        HashMap<String,String> headers)
                             throws MessagingException, GeneralSecurityException, IOException {
         var savedTeamLeader=rapportTeamLeaderRepository.findByDemandeDeSanction(rapportTeamLeader.getDemandeDeSanction());

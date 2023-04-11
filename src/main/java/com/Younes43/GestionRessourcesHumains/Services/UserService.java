@@ -3,6 +3,7 @@ package com.Younes43.GestionRessourcesHumains.Services;
 import com.Younes43.GestionRessourcesHumains.Entities.ApplicationUser;
 import com.Younes43.GestionRessourcesHumains.IServices.IUserService;
 import com.Younes43.GestionRessourcesHumains.Repositories.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -15,7 +16,7 @@ public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     @Override
-    public ApplicationUser createUser(ApplicationUser user) {
+    public ApplicationUser createUser(@Valid ApplicationUser user) {
         return userRepository.save(user);
     }
 
@@ -32,7 +33,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public ApplicationUser updateUser(ApplicationUser user) {
+    public ApplicationUser updateUser(@Valid ApplicationUser user) {
         return userRepository.save(user);
     }
 

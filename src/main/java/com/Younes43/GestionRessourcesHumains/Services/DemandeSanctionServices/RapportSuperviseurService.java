@@ -8,6 +8,7 @@ import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionReposit
 import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.RapportTeamLeaderRepository;
 import com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices.Utilities.Utilities;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class RapportSuperviseurService implements IRapportSuperviseurService {
 
     @Transactional
     @Override
-    public RAPPORT_SUPERVISEUR createRapportSuperviseur(RAPPORT_SUPERVISEUR rapportSuperviseur,
+    public RAPPORT_SUPERVISEUR createRapportSuperviseur(@Valid RAPPORT_SUPERVISEUR rapportSuperviseur,
                                                         HashMap<String,String> headers)
                                                         throws MessagingException, GeneralSecurityException, IOException {
         var savedRapport_superviseur=rapportSuperviseurRepository.findByDemandeDeSanction(rapportSuperviseur.getDemandeDeSanction());

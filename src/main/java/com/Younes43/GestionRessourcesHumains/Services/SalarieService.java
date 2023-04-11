@@ -3,6 +3,7 @@ package com.Younes43.GestionRessourcesHumains.Services;
 import com.Younes43.GestionRessourcesHumains.Entities.Salarie;
 import com.Younes43.GestionRessourcesHumains.IServices.ISalarieService;
 import com.Younes43.GestionRessourcesHumains.Repositories.SalarieRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class SalarieService implements ISalarieService {
     private final SalarieRepository salarieRepository;
 
     @Override
-    public Salarie createSalarie(Salarie salarie) {
+    public Salarie createSalarie(@Valid Salarie salarie) {
 
         salarie.setMatricule(generateID());
         salarie.setDate_dembauche(LocalDate.now().format(dateFormatter));
@@ -39,7 +40,7 @@ public class SalarieService implements ISalarieService {
     }
 
     @Override
-    public Salarie updateSalarie(Salarie salarie) {
+    public Salarie updateSalarie(@Valid Salarie salarie) {
 
         return salarieRepository.save(salarie);
     }

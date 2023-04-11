@@ -5,6 +5,7 @@ import com.Younes43.GestionRessourcesHumains.IServices.IRapportRhPlus1Service;
 import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.RapportRhPlus1Repository;
 import com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices.Utilities.Utilities;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
@@ -20,7 +21,7 @@ public class RapportRhPlus1Service implements IRapportRhPlus1Service {
     private final Utilities utilities;
     @Transactional
     @Override
-    public RAPPORT_RHPLUS1 createRapportRhPlus1(RAPPORT_RHPLUS1 rapportRhplus1,
+    public RAPPORT_RHPLUS1 createRapportRhPlus1(@Valid RAPPORT_RHPLUS1 rapportRhplus1,
                                                 HashMap<String,String> headers) throws MessagingException, GeneralSecurityException, IOException {
         var savedRapport_rhplus1=rapportRhPlus1Repository.findByDemandeDeSanction(rapportRhplus1.getDemandeDeSanction());
 
