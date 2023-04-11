@@ -30,6 +30,7 @@ public class RAPPORT_TEAM_LEADER implements IRapport{
     private String section;
     private String dateCommis;
     private String laFaute;
+    private String temoin;
     private String date;
     private boolean isValidated;
     private boolean processedBySuperviseur;

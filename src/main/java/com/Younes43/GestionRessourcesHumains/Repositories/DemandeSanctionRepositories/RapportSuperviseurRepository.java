@@ -5,6 +5,7 @@ import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_S
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -12,5 +13,5 @@ public interface RapportSuperviseurRepository extends JpaRepository<RAPPORT_SUPE
     Optional<RAPPORT_SUPERVISEUR> findByDemandeDeSanctionId(Long id);
     Optional<RAPPORT_SUPERVISEUR> findByDemandeDeSanction(DemandeDeSanction demandeDeSanction);
 
-
+    List<RAPPORT_SUPERVISEUR> findAllByEscalatedToRhIsFalseAndProcessedByManagerIsFalse();
 }

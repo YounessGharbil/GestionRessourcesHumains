@@ -33,7 +33,8 @@ public class RapportManagerService implements IRapportManagerService {
         RAPPORT_SUPERVISEUR rapportSuperviseur=rapportManager.getDemandeDeSanction().getRapportSuperviseur();
         rapportSuperviseur.setProcessedByManager(true);
         rapportSuperviseurRepository.save(rapportSuperviseur);
-        return rapportManagerRepository.save(rapportManager);}
+        return rapportManagerRepository.save(rapportManager);
+    }
     return null;
     }
     @Override

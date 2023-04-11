@@ -68,6 +68,7 @@ public class RapportTeamLeaderController implements IRapportTeamLeaderController
               .dateCommis(createRapportTeamLeaderRequest.getDateCommis())
               .laFaute(createRapportTeamLeaderRequest.getLaFaute())
               .salariéMatricule(salarie.getMatricule())
+              .temoin(createRapportTeamLeaderRequest.getTemoin())
               .isValidated(createRapportTeamLeaderRequest.isValid())
               .date(new Date().toString())
               .build();

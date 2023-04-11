@@ -13,5 +13,6 @@ public class CreateRapportTeamLeaderRequest {
     private String  salariéMatricule;
     private String dateCommis;
     private String laFaute;
+    private String temoin;
     private boolean valid;
 }
