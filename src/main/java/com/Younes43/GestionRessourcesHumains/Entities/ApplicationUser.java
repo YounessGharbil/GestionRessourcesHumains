@@ -37,25 +37,18 @@ public class ApplicationUser  implements UserDetails {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "salarie_id")
     private Salarie salarie;
-    @NotBlank
-    @NotNull
+
     private String matricule;
-    @NotBlank
-    @NotNull
+
     private String site;
-    @NotBlank
-    @NotNull
+
     private String department;
-    @NotBlank(message = "")
-    @NotNull(message = "")
-    @Email
+
     private String email;
-    @NotBlank(message = "")
-    @NotNull(message = "")
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    @NotBlank(message = "")
-    @NotNull(message = "")
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

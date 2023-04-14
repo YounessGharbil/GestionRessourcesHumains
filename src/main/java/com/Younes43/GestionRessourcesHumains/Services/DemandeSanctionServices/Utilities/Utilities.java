@@ -82,7 +82,7 @@ public class Utilities {
         return superior;
     }
 
-    private boolean isDirect(Salarie salarie) {
+    public boolean isDirect(Salarie salarie) {
         return salarie.getBu().toString().equals(BusinessUnit.INDUSTRIAL.name()) || salarie.getBu().toString().equals(BusinessUnit.APPLICATION_TOOLING.name());
     }
 

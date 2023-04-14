@@ -14,7 +14,6 @@ public class DemandeDeSanctionService implements IDemandeDeSanctionService {
      private final DemandeDeSanctionRepository demandeDeSanctionRepository;
     @Override
     public DemandeDeSanction createDemandeDeSanction(CreateDemandeDeSanctionRequest createDemandeDeSanctionRequest){
-        System.out.println("demande status"+createDemandeDeSanctionRequest.getDemandeStatus());
 
         return demandeDeSanctionRepository.save(DemandeDeSanction.builder()
                         .salarie(createDemandeDeSanctionRequest.getSalarie())

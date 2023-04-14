@@ -22,7 +22,7 @@ public class RaportRhService implements IRaportRhService {
     private final RapportRhRepository rapportRhRepository;
    @Transactional
    @Override
-   public RAPPORT_RH createRapportRh(@Valid RAPPORT_RH rapportRh,
+   public RAPPORT_RH createRapportRh( RAPPORT_RH rapportRh,
                                      HashMap<String,String> headers) throws MessagingException, GeneralSecurityException, IOException {
       var savedRapport_rh=rapportRhRepository.findByDemandeDeSanction(rapportRh.getDemandeDeSanction());
       if(!savedRapport_rh.isPresent()){

@@ -22,22 +22,17 @@ public class RAPPORT_MANAGER implements IRapport {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank
-    @NotNull
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "demande_de_sanction_id")
     private DemandeDeSanction demandeDeSanction;
-    @NotBlank
-    @NotNull
+
     private String  userMatricule;
-    @NotBlank
-    @NotNull
+
     private String avisManager;
-    @NotBlank
-    @NotNull
+
     private String sanctionDemandé;
-    @NotBlank(message = "please enter a valid Date")
-    @NotNull(message = "please enter a valid Date")
+
     private String date;
 
     private boolean isValidated;

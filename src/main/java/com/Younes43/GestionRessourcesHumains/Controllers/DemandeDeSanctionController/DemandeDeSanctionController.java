@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class DemandeDeSanctionController {
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
+    private final Utilities utilities;
     private final DemandeDeSanctionService demandeDeSanctionService;
     private final SalarieService salarieService;
     @GetMapping("demandePdf/{id}")
@@ -36,9 +36,16 @@ public class DemandeDeSanctionController {
 
         RAPPORT_TEAM_LEADER rapportTeamLeader=demandeDeSanction.getRapportTeamLeader();
         RAPPORT_SUPERVISEUR rapportSuperviseur=demandeDeSanction.getRapportSuperviseur();
-        RAPPORT_MANAGER rapportManager=demandeDeSanction.getRapportManager();
         RAPPORT_RH rapportRh=demandeDeSanction.getRapportRh();
         RAPPORT_RHPLUS1 rapportRhplus1=demandeDeSanction.getRapportRhplus1();
+        RAPPORT_MANAGER rapportManager;
+        if(demandeDeSanction.getRapportManager()!=null){
+            rapportManager=demandeDeSanction.getRapportManager();
+            }
+        else{
+            rapportManager=RAPPORT_MANAGER.builder().avisManager("...").sanctionDemandé("...").build();
+        }
+
 
 
 

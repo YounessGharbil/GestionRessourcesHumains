@@ -24,28 +24,20 @@ public class RAPPORT_RH implements IRapport {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank
-    @NotNull
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "demande_de_sanction_id")
     private DemandeDeSanction demandeDeSanction;
 
-    @NotBlank
-    @NotNull
+
     private String  userMatricule;
-    @NotBlank(message = "please enter a valid Date")
-    @NotNull(message = "please enter a valid Date")
+
     private String dateEmbauche;
-    @NotBlank
-    @NotNull
-    @Min(value = 17,message = "please enter a valid age")
-    @Max(value = 65,message = "please enter a valid age")
+
     private int age;
-    @NotBlank
-    @NotNull
+
     private int nbrEnfants;
-    @NotBlank(message = "please enter a valid Date")
-    @NotNull(message = "please enter a valid Date")
+
     private String date;
 
     private boolean isValidated;

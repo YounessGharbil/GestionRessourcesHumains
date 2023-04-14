@@ -25,7 +25,7 @@ public class RapportManagerService implements IRapportManagerService {
 
     @Transactional
     @Override
-    public RAPPORT_MANAGER createRapportManager(@Valid RAPPORT_MANAGER rapportManager,
+    public RAPPORT_MANAGER createRapportManager( RAPPORT_MANAGER rapportManager,
                                                 HashMap<String,String> headers ) throws MessagingException, GeneralSecurityException, IOException {
         var savedRapport_manager=rapportManagerRepository.findByDemandeDeSanction(rapportManager.getDemandeDeSanction());
         RAPPORT_SUPERVISEUR rapport_superviseur=rapportSuperviseurRepository.findByDemandeDeSanction(rapportManager.getDemandeDeSanction()).get();

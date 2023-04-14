@@ -26,7 +26,7 @@ public class RapportSuperviseurService implements IRapportSuperviseurService {
 
     @Transactional
     @Override
-    public RAPPORT_SUPERVISEUR createRapportSuperviseur(@Valid RAPPORT_SUPERVISEUR rapportSuperviseur,
+    public RAPPORT_SUPERVISEUR createRapportSuperviseur( RAPPORT_SUPERVISEUR rapportSuperviseur,
                                                         HashMap<String,String> headers)
                                                         throws MessagingException, GeneralSecurityException, IOException {
         var savedRapport_superviseur=rapportSuperviseurRepository.findByDemandeDeSanction(rapportSuperviseur.getDemandeDeSanction());

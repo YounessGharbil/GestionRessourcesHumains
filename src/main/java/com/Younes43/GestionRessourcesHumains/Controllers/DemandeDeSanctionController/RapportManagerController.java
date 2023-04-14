@@ -3,6 +3,7 @@ package com.Younes43.GestionRessourcesHumains.Controllers.DemandeDeSanctionContr
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.DemandeDeSanction;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_MANAGER;
 import com.Younes43.GestionRessourcesHumains.Entities.Requests.CreateRapportManagerRequest;
+import com.Younes43.GestionRessourcesHumains.Entities.Salarie;
 import com.Younes43.GestionRessourcesHumains.IControllers.IRapportManagerController;
 import com.Younes43.GestionRessourcesHumains.IServices.IDemandeDeSanctionService;
 import com.Younes43.GestionRessourcesHumains.IServices.IRapportManagerService;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 public class RapportManagerController implements IRapportManagerController {
     private final IRapportManagerService rapportManagerService;
     private final IDemandeDeSanctionService demandeDeSanctionService;
+    private final Utilities utilities;
 
     @PostMapping("/create")
     @Override
@@ -35,6 +37,12 @@ public class RapportManagerController implements IRapportManagerController {
                                                        @RequestBody CreateRapportManagerRequest createRapportManagerRequest) throws MessagingException, GeneralSecurityException, IOException {
         HashMap<String,String> headers= Utilities.extractHeaders(request);
         DemandeDeSanction demandeDeSanction=demandeDeSanctionService.getDemandeDeSanction(createRapportManagerRequest.getDemandeId());
+        Salarie salarie=demandeDeSanction.getSalarie();
+        if(utilities.isDirect(salarie)){
+            return new ResponseEntity<>("you dont have authority to create rapport manager for this employee"
+                    ,HttpStatus.BAD_REQUEST);
+        }
+
         RAPPORT_MANAGER rapportManager=RAPPORT_MANAGER.builder()
                 .demandeDeSanction(demandeDeSanction)
                 .userMatricule(headers.get("matricule"))

@@ -1,7 +1,6 @@
 package com.Younes43.GestionRessourcesHumains.Controllers;
 
-import com.Younes43.GestionRessourcesHumains.Entities.Enums.BusinessUnit;
-import com.Younes43.GestionRessourcesHumains.Entities.Enums.TypeContrat;
+import com.Younes43.GestionRessourcesHumains.Entities.Enums.*;
 import com.Younes43.GestionRessourcesHumains.Entities.Requests.CreateSalarieRequest;
 import com.Younes43.GestionRessourcesHumains.Entities.Requests.UpdateSalarieRequest;
 import com.Younes43.GestionRessourcesHumains.Entities.Salarie;
@@ -29,6 +28,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/salarie")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 public class SalarieController implements ISalarieController {
     private final SalarieService salarieService;
@@ -124,15 +124,15 @@ public class SalarieController implements ISalarieController {
                 salarie.setMatricule(row.getCell(1).getStringCellValue());
                 salarie.setPrenom(row.getCell(2).getStringCellValue());
                 salarie.setDate_dembauche(row.getCell(3).getStringCellValue());
-                salarie.setSegment(row.getCell(4).getStringCellValue());
+                salarie.setSegment(Segment.valueOf(row.getCell(4).getStringCellValue()));
                 salarie.setBu(BusinessUnit.valueOf(row.getCell(5).getStringCellValue()));
-                salarie.setSite(row.getCell(6).getStringCellValue());
-                salarie.setCode_site(row.getCell(7).getStringCellValue());
+                salarie.setSite(Site.valueOf(row.getCell(6).getStringCellValue()));
+                salarie.setCode_site(CodeSite.valueOf(row.getCell(7).getStringCellValue()));
                 salarie.setDepartement(row.getCell(8).getStringCellValue());
                 salarie.setLocal_job_title(row.getCell(9).getStringCellValue());
                 salarie.setPosition(row.getCell(10).getStringCellValue());
                 salarie.setSupervisor(row.getCell(11).getStringCellValue());
-                salarie.setGenre(row.getCell(12).getStringCellValue());
+                salarie.setGenre(Genre.valueOf(row.getCell(12).getStringCellValue()));
                 salarie.setType_de_contrat(TypeContrat.valueOf(row.getCell(13).getStringCellValue()));
                 salarie.setStatus(row.getCell(14).getStringCellValue());
 
