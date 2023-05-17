@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Data
 @Table
@@ -27,6 +29,7 @@ public class RAPPORT_RH implements IRapport {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "demande_de_sanction_id")
+    @JsonIgnoreProperties("rapportRh")
     private DemandeDeSanction demandeDeSanction;
 
 
@@ -42,5 +45,5 @@ public class RAPPORT_RH implements IRapport {
 
     private boolean isValidated;
 
-
+    private boolean isProcessedByRhPlus1;
 }

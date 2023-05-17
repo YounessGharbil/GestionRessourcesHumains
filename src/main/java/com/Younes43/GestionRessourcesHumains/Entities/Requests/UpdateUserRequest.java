@@ -2,6 +2,7 @@ package com.Younes43.GestionRessourcesHumains.Entities.Requests;
 
 
 import com.Younes43.GestionRessourcesHumains.Entities.Enums.Role;
+import com.Younes43.GestionRessourcesHumains.Entities.Enums.Site;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +17,5 @@ public class UpdateUserRequest {
     private String email;
     private String password;
     private Role role;
+    private Site site;
 }

@@ -1,9 +1,11 @@
 package com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices;
+import java.util.List;
 
-
+import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.DemandeDeSanction;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_SUPERVISEUR;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_TEAM_LEADER;
 import com.Younes43.GestionRessourcesHumains.IServices.IRapportSuperviseurService;
+import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.DemandeDeSanctionRepository;
 import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.RapportSuperviseurRepository;
 import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.RapportTeamLeaderRepository;
 import com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices.Utilities.Utilities;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 public class RapportSuperviseurService implements IRapportSuperviseurService {
     private final RapportSuperviseurRepository rapportSuperviseurRepository;
     private final RapportTeamLeaderRepository rapportTeamLeaderRepository;
+    private final DemandeDeSanctionRepository demandeDeSanctionRepository;
     private final Utilities utilities;
 
     @Transactional
@@ -34,10 +37,13 @@ public class RapportSuperviseurService implements IRapportSuperviseurService {
 
         if (!savedRapport_superviseur.isPresent() && !rapportTeamLeader.isEscalatedToRh()) {
             utilities.sendMailToSuperior(rapportSuperviseur, headers);
-            //RAPPORT_TEAM_LEADER rapportTeamLeader = rapportSuperviseur.getDemandeDeSanction().getRapportTeamLeader();
+            DemandeDeSanction demande=demandeDeSanctionRepository
+            .findById(rapportSuperviseur.getDemandeDeSanction().getId()).get();
+            RAPPORT_SUPERVISEUR rapportsuperviseur=rapportSuperviseurRepository.save(rapportSuperviseur);
             rapportTeamLeader.setProcessedBySuperviseur(true);
+            demande.setRapportSuperviseur(rapportSuperviseur);
             rapportTeamLeaderRepository.save(rapportTeamLeader);
-            return rapportSuperviseurRepository.save(rapportSuperviseur);
+            return rapportsuperviseur;
         }
         return null;
     }
@@ -50,5 +56,12 @@ public class RapportSuperviseurService implements IRapportSuperviseurService {
         return rapportDuShiftLeader;
     }
 
+    public List<RAPPORT_SUPERVISEUR> getAllRapportSuperviseur(){
+        return rapportSuperviseurRepository.findAll();
+    }
+    @Override
+    public List<RAPPORT_SUPERVISEUR> getRapportsSuperviseurNotProcessedByManager() {
+        return rapportSuperviseurRepository.findAllByEscalatedToRhIsFalseAndProcessedByManagerIsFalse();
+    }
 
 }

@@ -56,4 +56,6 @@ public class Salarie {
     private TypeContrat type_de_contrat;
 
     private String status;
+    private String direct;
+
 }

@@ -9,10 +9,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
+@CrossOrigin(origins =" http://localhost:4200")
 public class SecurityConfig {
 
     private final  AuthenticationProvider authenticationProvider;
@@ -23,18 +25,22 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http.csrf().disable()
-                .authorizeHttpRequests()
-                        .anyRequest().permitAll()
-                       //.requestMatchers("/auth/**")
-                       // .permitAll()
-                        // .requestMatchers("/demandeDeSanction/**").permitAll()
-                        //.hasAnyAuthority("ROLE_RH_PLUS1","ROLE_RH","ROLE_MANAGER","ROLE_SUPERVISEUR","ROLE_TEAM_LEADER")
-                        //.requestMatchers("/user/**")
-                       // .hasAnyAuthority("ROLE_RH_PLUS1","ROLE_RH")
-                       // .requestMatchers("/salarie/**")
-                        //.hasAnyAuthority("ROLE_RH_PLUS1","ROLE_RH")
-
+                http.csrf().disable().cors().disable()
+                .authorizeHttpRequests().anyRequest().permitAll()
+                        // .requestMatchers("/auth/**")
+                        //     .permitAll()
+                        // .requestMatchers("/demandeDeSanction/rapportTeamLeader/**")
+                        //     .hasAuthority("ROLE_TEAM_LEADER")
+                        // .requestMatchers("/demandeDeSanction/rapportSuperviseur/**")
+                        //     .hasAuthority("ROLE_SUPERVISEUR")
+                        // .requestMatchers("/demandeDeSanction/rapportManager/**")
+                        //     .hasAuthority("ROLE_MANAGER")
+                        // .requestMatchers("/demandeDeSanction/rapportRh/**")
+                        //     .hasAuthority("ROLE_RH")
+                        // .requestMatchers("/demandeDeSanction/rapportRhPlus1/**")
+                        //     .hasAuthority("ROLE_RH_PLUS1")
+                        // .requestMatchers("/demandeDeSanction/demandePdf/**")
+                        //     .hasAnyAuthority("ROLE_RH_PLUS1","ROLE_RH")
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

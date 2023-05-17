@@ -32,8 +32,7 @@ public class ApplicationUser  implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
-    @NotBlank
-    @NotNull
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "salarie_id")
     private Salarie salarie;

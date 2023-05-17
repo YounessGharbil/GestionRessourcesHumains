@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateSalarieRequest {
-    private Long Id;
+    private Long id;
     private String nom;
     private String prenom;
     private Segment segment;
@@ -28,4 +28,5 @@ public class UpdateSalarieRequest {
 
     private TypeContrat type_de_contrat;
     private String status;
+    private String direct;
 }

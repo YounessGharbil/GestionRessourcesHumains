@@ -15,20 +15,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.Random;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
-@RequestMapping("/salarie")
 @CrossOrigin(origins = "http://localhost:4200")
+@RestController
+@RequestMapping("/salaries")
 @RequiredArgsConstructor
 public class SalarieController implements ISalarieController {
     private final SalarieService salarieService;
@@ -50,7 +45,8 @@ public class SalarieController implements ISalarieController {
                 .supervisor(createSalarieRequest.getSupervisor())
                 .genre(createSalarieRequest.getGenre())
                 .type_de_contrat(createSalarieRequest.getType_de_contrat())
-                .status(createSalarieRequest.getStatus())
+                .status(SalarieStatus.VIDE.name())
+                .direct(createSalarieRequest.getDirect())
                 .build();
 
 
@@ -63,13 +59,14 @@ public class SalarieController implements ISalarieController {
         if(salarie==null){
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(salarie,HttpStatus.FOUND);
+        return new ResponseEntity<>(salarie,HttpStatus.OK);
     }
 
     @PutMapping("/update")
     @Override
     public ResponseEntity<Salarie> updateSalarie(@RequestBody UpdateSalarieRequest updateSalarieRequest) {
         Salarie salarie=salarieService.getSalarie(updateSalarieRequest.getId());
+       
         if(salarie==null){
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
@@ -86,19 +83,21 @@ public class SalarieController implements ISalarieController {
         salarie.setGenre(updateSalarieRequest.getGenre());
         salarie.setType_de_contrat(updateSalarieRequest.getType_de_contrat());
         salarie.setStatus(updateSalarieRequest.getStatus());
+        salarie.setDirect(updateSalarieRequest.getDirect());
 
 
-        return new ResponseEntity<>(salarieService.updateSalarie(salarie),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(salarieService.updateSalarie(salarie),HttpStatus.OK);
     }
     @DeleteMapping("/delete/{id}")
     @Override
     public ResponseEntity<String> deleteSalarie( @PathVariable Long id) {
         Salarie salarie=salarieService.getSalarie(id);
+
         if(salarie==null){
             return new ResponseEntity<>("salarie does not exist",HttpStatus.NOT_FOUND);
         }
         salarieService.deleteSalarie(id);
-        return new ResponseEntity<>("deleted successfully",HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("deleted successfully",HttpStatus.NO_CONTENT);
     }
     @GetMapping("/getAll")
     @Override
@@ -119,31 +118,28 @@ public class SalarieController implements ISalarieController {
 
                 Salarie salarie = new Salarie();
                 XSSFRow row = worksheet.getRow(i);
-            
                 salarie.setNom(row.getCell(0).getStringCellValue());
-                salarie.setMatricule(row.getCell(1).getStringCellValue());
-                salarie.setPrenom(row.getCell(2).getStringCellValue());
-                salarie.setDate_dembauche(row.getCell(3).getStringCellValue());
-                salarie.setSegment(Segment.valueOf(row.getCell(4).getStringCellValue()));
-                salarie.setBu(BusinessUnit.valueOf(row.getCell(5).getStringCellValue()));
-                salarie.setSite(Site.valueOf(row.getCell(6).getStringCellValue()));
-                salarie.setCode_site(CodeSite.valueOf(row.getCell(7).getStringCellValue()));
-                salarie.setDepartement(row.getCell(8).getStringCellValue());
-                salarie.setLocal_job_title(row.getCell(9).getStringCellValue());
-                salarie.setPosition(row.getCell(10).getStringCellValue());
-                salarie.setSupervisor(row.getCell(11).getStringCellValue());
-                salarie.setGenre(Genre.valueOf(row.getCell(12).getStringCellValue()));
-                salarie.setType_de_contrat(TypeContrat.valueOf(row.getCell(13).getStringCellValue()));
-                salarie.setStatus(row.getCell(14).getStringCellValue());
-
+                salarie.setPrenom(row.getCell(1).getStringCellValue());
+                salarie.setDate_dembauche(String.valueOf(row.getCell(2).getNumericCellValue()));
+                salarie.setSegment(Segment.valueOf(row.getCell(3).getStringCellValue()));
+                salarie.setBu(BusinessUnit.valueOf(row.getCell(4).getStringCellValue()));
+                salarie.setSite(Site.valueOf(row.getCell(5).getStringCellValue()));
+                salarie.setCode_site(CodeSite.valueOf(row.getCell(6).getStringCellValue()));
+                salarie.setDepartement(row.getCell(7).getStringCellValue());
+                salarie.setLocal_job_title(row.getCell(8).getStringCellValue());
+                salarie.setPosition(row.getCell(9).getStringCellValue());
+                salarie.setSupervisor(row.getCell(10).getStringCellValue());
+                salarie.setGenre(Genre.valueOf(row.getCell(11).getStringCellValue()));
+                salarie.setType_de_contrat(TypeContrat.valueOf(row.getCell(12).getStringCellValue()));
+                salarie.setStatus(SalarieStatus.VIDE.name());
+                salarie.setDirect(row.getCell(13).getStringCellValue());
                 salaries.add(salarie);
             }
 
             salarieService.createSalaries(salaries);
-            return new ResponseEntity<>("Salaries uploaded successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Salaries uploaded successfully", HttpStatus.CREATED);
         } catch (IOException e) {
             e.printStackTrace();
-
             return new ResponseEntity<>("Error uploading salaries", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

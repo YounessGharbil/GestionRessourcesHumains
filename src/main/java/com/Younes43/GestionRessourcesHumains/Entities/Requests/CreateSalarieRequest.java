@@ -26,5 +26,5 @@ public class CreateSalarieRequest {
     private String supervisor;
     private Genre genre;
     private TypeContrat type_de_contrat;
-    private String status;
+    private String direct;
 }

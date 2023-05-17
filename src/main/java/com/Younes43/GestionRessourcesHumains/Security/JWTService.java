@@ -26,6 +26,7 @@ public class JWTService {
     }
 
     private Claims extractAllClaims(String token) {
+        System.out.println("inside extract all claims--------------");
         return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
 
     }

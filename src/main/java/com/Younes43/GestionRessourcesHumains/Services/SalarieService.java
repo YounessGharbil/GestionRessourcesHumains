@@ -1,6 +1,8 @@
 package com.Younes43.GestionRessourcesHumains.Services;
 
+import com.Younes43.GestionRessourcesHumains.Entities.ApplicationUser;
 import com.Younes43.GestionRessourcesHumains.Entities.Salarie;
+import com.Younes43.GestionRessourcesHumains.Entities.Enums.Site;
 import com.Younes43.GestionRessourcesHumains.IServices.ISalarieService;
 import com.Younes43.GestionRessourcesHumains.Repositories.SalarieRepository;
 import jakarta.validation.Valid;
@@ -17,6 +19,8 @@ import java.util.UUID;
 public class SalarieService implements ISalarieService {
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private final SalarieRepository salarieRepository;
+    private final UserService userService;
+
 
     @Override
     public Salarie createSalarie(@Valid Salarie salarie) {
@@ -41,7 +45,13 @@ public class SalarieService implements ISalarieService {
 
     @Override
     public Salarie updateSalarie(@Valid Salarie salarie) {
-
+        ApplicationUser user=userService.getUser(salarie.getMatricule());
+        if(user!=null){
+            user.setDepartment(salarie.getDepartement());
+            user.setSite(salarie.getSite().toString());
+            userService.updateUser(user);
+        }
+       
         return salarieRepository.save(salarie);
     }
     @Override
@@ -59,6 +69,7 @@ public class SalarieService implements ISalarieService {
     public String createSalaries(List<Salarie> salaries) {
         try{
             for(Salarie salarie:salaries){
+                salarie.setMatricule(generateID());
                 createSalarie(salarie);
             }
         }

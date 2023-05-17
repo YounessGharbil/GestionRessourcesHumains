@@ -1,7 +1,7 @@
 package com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction;
 
 import com.Younes43.GestionRessourcesHumains.Entities.ApplicationUser;
-import com.Younes43.GestionRessourcesHumains.Entities.Enums.DemandeStatus;
+
 import com.Younes43.GestionRessourcesHumains.Entities.Salarie;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.annotation.Nullable;
 
 @Entity
 @Data
@@ -32,15 +31,20 @@ public class DemandeDeSanction {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     private ApplicationUser user;
-    @OneToOne(mappedBy = "demandeDeSanction", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne( cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "rapport_team_leader_id")
     private RAPPORT_TEAM_LEADER rapportTeamLeader;
-    @OneToOne(mappedBy = "demandeDeSanction", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne( cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "rapport_superviseur_id",nullable = true)
     private RAPPORT_SUPERVISEUR rapportSuperviseur;
-    @OneToOne(mappedBy = "demandeDeSanction", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne( cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "rapport_manager_id",nullable = true)
     private RAPPORT_MANAGER rapportManager;
-    @OneToOne(mappedBy = "demandeDeSanction", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne( cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "rapport_rh_id")
     private RAPPORT_RH rapportRh;
-    @OneToOne(mappedBy = "demandeDeSanction", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne( cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "rapport_rhplus1_id")
     private RAPPORT_RHPLUS1 rapportRhplus1;
 
     private boolean teamLeaderValidation;
@@ -50,4 +54,7 @@ public class DemandeDeSanction {
     private boolean rhPlus1Validation;
     private String demandeStatus;
     private String niveauDeTraitement;
+    private String site;
+    private String departement;
+    
 }

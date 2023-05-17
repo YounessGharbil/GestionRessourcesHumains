@@ -1,11 +1,13 @@
 package com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices;
 
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.DemandeDeSanction;
-import com.Younes43.GestionRessourcesHumains.Entities.Enums.NiveauDeTraitement;
 import com.Younes43.GestionRessourcesHumains.Entities.Requests.CreateDemandeDeSanctionRequest;
 import com.Younes43.GestionRessourcesHumains.IServices.IDemandeDeSanctionService;
 import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.DemandeDeSanctionRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +31,13 @@ public class DemandeDeSanctionService implements IDemandeDeSanctionService {
                         demandeDeSanctionRepository.findById(id).get():null;
 
         return demandeDeSanction;
+    }
+
+    @Override
+    public List<DemandeDeSanction> getAllDemandes() {
+        List<DemandeDeSanction> demandes=demandeDeSanctionRepository.findAllNotEnTraitement();
+        
+        return demandes;
     }
 }
 

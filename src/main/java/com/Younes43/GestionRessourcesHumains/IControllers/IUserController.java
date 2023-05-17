@@ -15,6 +15,8 @@ public interface IUserController {
 
 
      ResponseEntity<ApplicationUser> getUser( Long id);
+     
+     // ResponseEntity<ApplicationUser> getUser( String id);
 
      ResponseEntity<ApplicationUser> updateUser( UpdateUserRequest user);
 

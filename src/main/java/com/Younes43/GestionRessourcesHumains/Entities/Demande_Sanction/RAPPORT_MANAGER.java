@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.lang.Nullable;
 
 @Entity
 @Data
@@ -21,6 +22,7 @@ import org.hibernate.annotations.DynamicUpdate;
 public class RAPPORT_MANAGER implements IRapport {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Nullable
     private Long id;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
@@ -37,6 +39,7 @@ public class RAPPORT_MANAGER implements IRapport {
 
     private boolean isValidated;
 
+    private boolean isProcessedByRh;
 
 
 }

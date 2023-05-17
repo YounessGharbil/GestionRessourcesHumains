@@ -14,4 +14,5 @@ public class CreateRapportManagerRequest {
     private String avisManager;
     private String sanctionDemandé;
     private boolean valid;
+
 }

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@CrossOrigin(origins ="http://localhost:4200")
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final  JWTService jwtservice;
     private final UserDetailsService userDetailsService;
@@ -40,7 +42,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         }
 
         token=header.substring(7);
+        System.out.println("toooooooken"+token);
         appUsername=jwtservice.extractAppUsername(token);
+        System.out.println(appUsername.toString());
+
 
         if(appUsername!=null && SecurityContextHolder.getContext().getAuthentication()==null) {
             UserDetails userDetails=userDetailsService.loadUserByUsername(appUsername);

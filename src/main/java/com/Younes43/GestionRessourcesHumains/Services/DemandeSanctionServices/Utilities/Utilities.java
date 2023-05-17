@@ -3,7 +3,11 @@ package com.Younes43.GestionRessourcesHumains.Services.DemandeSanctionServices.U
 import com.Younes43.GestionRessourcesHumains.Entities.ApplicationUser;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.DemandeDeSanction;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.IRapport;
+import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_MANAGER;
+import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_RH;
+import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_RHPLUS1;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_SUPERVISEUR;
+import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_TEAM_LEADER;
 import com.Younes43.GestionRessourcesHumains.Entities.Enums.*;
 import com.Younes43.GestionRessourcesHumains.Entities.Salarie;
 import com.Younes43.GestionRessourcesHumains.Repositories.DemandeSanctionRepositories.DemandeDeSanctionRepository;
@@ -26,20 +30,7 @@ public class Utilities {
     private final GmailService gmailService;
 
 
-    public static  String  DemandeSanctionText= """
-            Lettre recommandée avec accusé de réception
-            \s
-            Madame, Monsieur,
-            A plusieurs reprises - le XXXXX (précisez les dates) - je vous ai fait savoir que je n'appréciais pas certains de vos comportements. En effet, XXXXX (précisez les faits).
-            \s
-            Ne constatant aucun changement dans votre attitude, je me vois dans l’obligation, par cette lettre, de vous adresser un avertissement.
-            \s
-            J’espère que cette démarche engendrera des changements dans votre comportement et votre travail. Dans le cas contraire, je serai dans l’obligation de prendre des mesures plus sévères à votre encontre.
-            \s
-            Nous vous prions d’agréer, Madame, Monsieur, nos respectueuses salutations.
-            \s
-            Signature
-            """;
+    
 
     public static HashMap<String,String> extractHeaders(HttpServletRequest request){
 
@@ -63,11 +54,12 @@ public class Utilities {
         String site= headers.get("site");
         String department= headers.get("department");
         Role superioRole;
+        
 
         switch (userRole) {
             case "ROLE_TEAM_LEADER" -> superioRole = Role.ROLE_SUPERVISEUR;
             case "ROLE_SUPERVISEUR" -> {
-                if (isDirect(salarie)) {
+                if (salarie.getDirect().equalsIgnoreCase("DIRECT")) {
                     superioRole = Role.ROLE_RH;
                 } else {
                     superioRole = Role.ROLE_MANAGER;
@@ -77,22 +69,27 @@ public class Utilities {
             case "ROLE_RH" -> superioRole = Role.ROLE_RH_PLUS1;
             default -> superioRole = null;
         }
+   
+
         ApplicationUser superior=userRepository.findByRoleAndDepartmentAndSite(superioRole,department,site).isPresent()?
                 userRepository.findByRoleAndDepartmentAndSite(superioRole,department,site).get():null;
+             
         return superior;
     }
 
-    public boolean isDirect(Salarie salarie) {
-        return salarie.getBu().toString().equals(BusinessUnit.INDUSTRIAL.name()) || salarie.getBu().toString().equals(BusinessUnit.APPLICATION_TOOLING.name());
-    }
+    // public boolean isDirect(Salarie salarie) {
+    //     return salarie.getDirect().equalsIgnoreCase("TRUE");
+    // }
 
     public void validateDemande(IRapport rapport,HashMap<String,String> headers){
         DemandeDeSanction savedDemandeDeSanction=rapport.getDemandeDeSanction();
         if(rapport.isValidated()){
             switch (headers.get("userRole")) {
                 case "ROLE_TEAM_LEADER" -> {
+                   
                     savedDemandeDeSanction.setTeamLeaderValidation(true);
                     savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.TEAM_LEADER.name());
+                    
                 }
                 case "ROLE_SUPERVISEUR" -> {
                     savedDemandeDeSanction.setSuperviseurValidation(true);
@@ -114,9 +111,15 @@ public class Utilities {
         }
         else {
             switch (headers.get("userRole")) {
-                case "ROLE_TEAM_LEADER" -> savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.TEAM_LEADER.name());
-                case "ROLE_SUPERVISEUR" -> savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.SUPERVISEUR.name());
-                case "ROLE_MANAGER" -> savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.MANAGER.name());
+                case "ROLE_TEAM_LEADER" -> {
+                    savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.TEAM_LEADER.name());
+                }
+                case "ROLE_SUPERVISEUR" -> {
+                    savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.SUPERVISEUR.name());
+                }
+                case "ROLE_MANAGER" -> {
+                    savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.MANAGER.name());
+                }
                 case "ROLE_RH" -> {
                     savedDemandeDeSanction.setDemandeStatus(DemandeStatus.Refusé.name());
                     savedDemandeDeSanction.setNiveauDeTraitement(NiveauDeTraitement.RH.name());
@@ -172,5 +175,7 @@ public class Utilities {
 
 
     }
+
+
 }
 

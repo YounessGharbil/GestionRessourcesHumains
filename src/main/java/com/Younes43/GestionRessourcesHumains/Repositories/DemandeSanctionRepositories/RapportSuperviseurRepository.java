@@ -12,6 +12,5 @@ import java.util.Optional;
 public interface RapportSuperviseurRepository extends JpaRepository<RAPPORT_SUPERVISEUR,Long> {
     Optional<RAPPORT_SUPERVISEUR> findByDemandeDeSanctionId(Long id);
     Optional<RAPPORT_SUPERVISEUR> findByDemandeDeSanction(DemandeDeSanction demandeDeSanction);
-
     List<RAPPORT_SUPERVISEUR> findAllByEscalatedToRhIsFalseAndProcessedByManagerIsFalse();
 }

@@ -3,6 +3,7 @@ package com.Younes43.GestionRessourcesHumains.Controllers.DemandeDeSanctionContr
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.DemandeDeSanction;
 import com.Younes43.GestionRessourcesHumains.Entities.Demande_Sanction.RAPPORT_SUPERVISEUR;
 import com.Younes43.GestionRessourcesHumains.Entities.Requests.CreateRapportSuperviseurRequest;
+import com.Younes43.GestionRessourcesHumains.Entities.Responses.GetAllRapportSuperviseurResponse;
 import com.Younes43.GestionRessourcesHumains.IControllers.IRapportSuperviseurController;
 import com.Younes43.GestionRessourcesHumains.IServices.IDemandeDeSanctionService;
 import com.Younes43.GestionRessourcesHumains.IServices.IRapportSuperviseurService;
@@ -11,17 +12,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/demandeDeSanction/rapportSuperviseur")
 @RequiredArgsConstructor
@@ -52,4 +52,72 @@ public class RapportSuperviseurController implements IRapportSuperviseurControll
         }
         return new ResponseEntity<>("RAPPORT SUPERVISEUR NOT CREATED", HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<GetAllRapportSuperviseurResponse>> getAllRapportSuperviseur() {
+        List<GetAllRapportSuperviseurResponse> AllRapportSuperviseur=new ArrayList<>();
+        for(RAPPORT_SUPERVISEUR rapport:rapportSuperviseurService.getAllRapportSuperviseur()){
+            AllRapportSuperviseur.add(
+                GetAllRapportSuperviseurResponse.builder()
+                .id(rapport.getId())
+                .demande_de_sanction_id(rapport.getDemandeDeSanction().getId())
+                .avis(rapport.getAvis())
+                .user_matricule(rapport.getUserMatricule())
+                .date(rapport.getDate())
+                .is_validated(rapport.isValidated())
+                .sanction_demande(rapport.getSanctionDemandé())
+                .processed_by_manager(rapport.isProcessedByManager())
+                .escalated_to_rh(rapport.isEscalatedToRh())
+                .build()
+                ) ;
+        }
+        
+        
+        return new ResponseEntity<>(AllRapportSuperviseur,HttpStatus.OK);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<GetAllRapportSuperviseurResponse> getRapportSuperviseur(@PathVariable Long id) {
+        RAPPORT_SUPERVISEUR RapportSuperviseur=rapportSuperviseurService.getRapportSuperviseur(id);
+        if(RapportSuperviseur==null){
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        }
+        GetAllRapportSuperviseurResponse response=GetAllRapportSuperviseurResponse.builder()
+        .id(RapportSuperviseur.getId())
+        .demande_de_sanction_id(RapportSuperviseur.getDemandeDeSanction().getId())
+        .user_matricule(RapportSuperviseur.getUserMatricule())
+        .avis(RapportSuperviseur.getAvis())
+        .sanction_demande(RapportSuperviseur.getSanctionDemandé())
+        .date(RapportSuperviseur.getDate())
+        .is_validated(RapportSuperviseur.isValidated())
+        .processed_by_manager(RapportSuperviseur.isProcessedByManager())
+        .escalated_to_rh(RapportSuperviseur.isEscalatedToRh())
+        .build();
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllNotProcessed")
+    @Override
+    public ResponseEntity<List<GetAllRapportSuperviseurResponse>> getRapportsSuperviseurNotProcessedByManager() {
+        List<GetAllRapportSuperviseurResponse> RapportsSuperviseur=new ArrayList<>();
+        for(RAPPORT_SUPERVISEUR rapport:rapportSuperviseurService.getRapportsSuperviseurNotProcessedByManager()){
+            RapportsSuperviseur.add(
+                GetAllRapportSuperviseurResponse.builder()
+                .id(rapport.getId())
+                .demande_de_sanction_id(rapport.getDemandeDeSanction().getId())
+                .avis(rapport.getAvis())
+                .user_matricule(rapport.getUserMatricule())
+                .date(rapport.getDate())
+                .is_validated(rapport.isValidated())
+                .sanction_demande(rapport.getSanctionDemandé())
+                .processed_by_manager(rapport.isProcessedByManager())
+                .escalated_to_rh(rapport.isEscalatedToRh())
+                .build()
+                ) ;
+        }
+        
+        
+        return new ResponseEntity<>(RapportsSuperviseur,HttpStatus.OK);
+    }
+
 }

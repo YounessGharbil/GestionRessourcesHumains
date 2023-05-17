@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 
@@ -32,6 +32,9 @@ public class UserController implements IUserController {
         if(salarie==null){
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
+        System.out.println("role "+createUserRequest.getRole());
+        System.out.println("email "+createUserRequest.getEmail());
+
 
         var user=ApplicationUser.builder()
                 .salarie(salarie)
@@ -39,6 +42,8 @@ public class UserController implements IUserController {
                 .password(passwordEncoder.encode(createUserRequest.getPassword()))
                 .role(createUserRequest.getRole())
                 .matricule(createUserRequest.getMatricule())
+                .department(salarie.getDepartement())
+                .site(salarie.getSite().name())
                 .build();
 
 
@@ -51,8 +56,18 @@ public class UserController implements IUserController {
         if(user==null){
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(user,HttpStatus.FOUND);
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
+
+    // @GetMapping("/get/{matricule}")
+    // @Override
+    // public ResponseEntity<ApplicationUser> getUser(@PathVariable String matricule) {
+    //     ApplicationUser user=UserService.getUser(matricule);
+    //     if(user==null){
+    //         return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+    //     }
+    //     return new ResponseEntity<>(user,HttpStatus.OK);
+    // }
 
     @PutMapping("/update")
     @Override
@@ -64,7 +79,7 @@ public class UserController implements IUserController {
         user.setEmail(userUpdated.getEmail());
         user.setPassword(passwordEncoder.encode(userUpdated.getPassword()));
         user.setRole(userUpdated.getRole());
-        return new ResponseEntity<>(UserService.updateUser(user),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(UserService.updateUser(user),HttpStatus.OK);
     }
     @DeleteMapping("/delete/{id}")
     @Override
@@ -74,7 +89,7 @@ public class UserController implements IUserController {
             return new ResponseEntity<>("user does not exist",HttpStatus.NOT_FOUND);
         }
         UserService.deleteUser(id);
-        return new ResponseEntity<>("deleted successfully",HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("deleted successfully",HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/getAll")
